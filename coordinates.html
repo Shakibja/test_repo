@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Link to CSS file for imgAreaSelect plugin -->
+    <link rel="stylesheet" href="./css/imgareaselect.css">
+</head>
+<body>
+    <!-- Form for uploading an image -->
+    <form>
+        <!-- Input field for uploading image file -->
+        <p>Image: <input type="file" name="profile_image" class="image" required /></p>
+        <!-- Input field to display all four values -->
+        <input type="text" name="coordinates" value="" />
+        <!-- Button to submit the form -->
+        <button type="submit" name="submit">Submit</button>
+    </form>
+    
+    <!-- Preview of the selected image -->
+    <p><img id="previewimage" style="display:none; height: 700px;"/></p>
+
+    <!-- jQuery library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- JavaScript file for imgAreaSelect plugin -->
+    <script src="./js/jquery.imgareaselect.js"></script>
+
+    <script>
+        // jQuery function to handle image selection and area selection
+        jQuery(function($) {
+            // Variable to hold the preview image element
+            var p = $("#previewimage");
+
+            // Event listener for when an image is selected
+            $("body").on("change", ".image", function(){
+                // Create a FileReader object to read the image file
+                var imageReader = new FileReader();
+                // Read the selected image file
+                imageReader.readAsDataURL(document.querySelector(".image").files[0]);
+
+                // Function to execute after the image is loaded
+                imageReader.onload = function (oFREvent) {
+                    // Set the source of the preview image to the loaded image and fade it in
+                    p.attr('src', oFREvent.target.result).fadeIn();
+                };
+            });
+
+            // Initialize the imgAreaSelect plugin on the preview image
+            $('#previewimage').imgAreaSelect({
+                // Function to execute when the selection is finalized
+                onSelectEnd: function (img, selection) {
+                    // Concatenate all four values into a single string
+                    var coordinates = selection.x1 + ',' + selection.y1 + ',' + selection.width + ',' + selection.height;
+                    // Set the value of the input field to the concatenated string
+                    $('input[name="coordinates"]').val(coordinates);            
+                }
+            });
+        });
+    </script>
+</body>
+</html>
